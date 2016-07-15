@@ -1,0 +1,33 @@
+{
+  "name": "json-reaper",
+  "version": "1.0.0",
+  "description": "JSON Reaper",
+  "main": "lib/reaper.js",
+  "scripts": {
+    "test": "mocha --reporter=spec test/*-test.js"
+  },
+  "author": "Fedor Indutny <fedor@indutny.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/indutny/json-reaper.git"
+  },
+  "keywords": [
+    "JSON",
+    "reaper",
+    "gzip",
+    "lookup",
+    "index"
+  ],
+  "bugs": {
+    "url": "https://github.com/indutny/json-reaper/issues"
+  },
+  "homepage": "https://github.com/indutny/json-reaper#readme",
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "async": "^2.0.0",
+    "json-reaper-backend": "^1.1.0"
+  }
+}
