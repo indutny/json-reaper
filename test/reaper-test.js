@@ -10,7 +10,6 @@ const Reaper = require('../');
 const db = path.join(__dirname, 'tmp', 'db.json.gz');
 
 describe('JSON Reaper', () => {
-  return;
   beforeEach(() => {
     try {
       fs.unlinkSync(db);
@@ -35,9 +34,24 @@ describe('JSON Reaper', () => {
         r.replace({
           a: 1,
           b: 2,
-          c: 3,
+          c: [ { f: 4 }, { f: 5 } ],
           d: 4
         }, callback);
+      },
+      (callback) => {
+        r.query([ 'c', 1 ], callback);
+      },
+      (value, callback) => {
+        assert.deepEqual(value, { f: 5 });
+        callback(null);
+      },
+
+      // Not found
+      (callback) => {
+        r.query([ 'e', 1 ], (err) => {
+          assert(/not found/i.test(err.message));
+          callback(null);
+        });
       }
     ], cb);
   });
