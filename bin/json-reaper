@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('fs');
+
+const async = require('async');
+const yargs = require('yargs')
+    .usage('$0 build project.gyp -- [optional extra args to `gyp`]')
+    .command('compress <input> <output>',
+             'compress and index input json file', (argv) => {
+               return argv
+                  .alias('d', 'depth')
+                  .default('d', 1)
+                  .number('d')
+                  .describe('d', 'desired indexing depth');
+             })
+    .command('query <input> <path>',
+             'query particular json value in json-reaper archive', (argv) => {
+               return argv
+                  .alias('d', 'depth')
+                  .default('d', 1)
+                  .number('d')
+                  .describe('d', 'desired indexing depth');
+             })
+    .alias('h', 'help')
+    .help();
+
+const argv = yargs.argv;
+const cmd = argv._[0];
+
+const Reaper = require('../');
+const JSONDepthStream = require('json-depth-stream');
+
+if (cmd === 'compress') {
+  const r = new Reaper(argv.output, { depth: argv.depth });
+
+  fs.open(argv.input, 'r', (err, fd) => {
+    if (err)
+      throw err;
+
+    r.replaceWithFD(fd, (err) => {
+      fs.close(fd);
+      if (err)
+      throw err;
+    });
+  });
+  return;
+}
+
+if (cmd === 'query') {
+  const r = new Reaper(argv.input, { depth: argv.depth });
+
+  r.query(JSON.parse(argv.path), (err, data) => {
+    if (err)
+      throw err;
+    console.log(JSON.stringify(data));
+  });
+  return;
+}
+
+yargs.showHelp();
+console.error(`Unknown command: ${cmd}`);
+process.exit(1);
