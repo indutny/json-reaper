@@ -6,8 +6,8 @@ const fs = require('fs');
 const async = require('async');
 const yargs = require('yargs')
     .usage('$0 build project.gyp -- [optional extra args to `gyp`]')
-    .command('compress <input> <output>',
-             'compress and index input json file', (argv) => {
+    .command('compress <output>',
+             'compress and index a json data from stdin', (argv) => {
                return argv
                   .alias('d', 'depth')
                   .default('d', 1)
@@ -34,15 +34,9 @@ const JSONDepthStream = require('json-depth-stream');
 if (cmd === 'compress') {
   const r = new Reaper(argv.output, { depth: argv.depth });
 
-  fs.open(argv.input, 'r', (err, fd) => {
+  r.replaceWithStream(process.stdin, (err) => {
     if (err)
       throw err;
-
-    r.replaceWithFD(fd, (err) => {
-      fs.close(fd);
-      if (err)
-      throw err;
-    });
   });
   return;
 }
