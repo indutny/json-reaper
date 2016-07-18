@@ -3,6 +3,9 @@
   "version": "1.2.0",
   "description": "JSON Reaper",
   "main": "lib/reaper.js",
+  "bin": {
+    "json-reaper": "bin/json-reaper"
+  },
   "scripts": {
     "test": "mocha --reporter=spec test/*-test.js"
   },
